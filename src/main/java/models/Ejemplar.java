@@ -1,12 +1,22 @@
 package models;
 
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
+@Entity
 public class Ejemplar implements Serializable {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column
     private String estado; /* excelente, bueno, regular, malo */
+    @Column
     private Integer edicion;
+
+    @ManyToOne
+    @JoinColumn(name = "libro_id")
+    private Libro libro_id;
 
     public Ejemplar() {
     }

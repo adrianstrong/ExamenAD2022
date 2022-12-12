@@ -1,10 +1,17 @@
 package models;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
+@Entity
 public class Libro implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column
     private String titulo;
+    @Column
     private String autor;
 
     /*

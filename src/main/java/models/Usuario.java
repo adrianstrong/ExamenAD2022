@@ -1,16 +1,23 @@
 package models;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
  *
  * @author FranciscoRomeroGuill
  */
-public class Usuario implements Serializable {
 
+@Entity
+public class Usuario implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column
     private String nombre;
+    @Column
     private String apellidos;
+    @Column
     private String dni;
 
     public Usuario() {

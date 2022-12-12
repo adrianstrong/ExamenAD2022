@@ -1,8 +1,13 @@
 package dao;
 
 import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+
+import models.Ejemplar;
 import models.Libro;
 import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
 /**
  *
@@ -14,33 +19,45 @@ public class BibliotecaDAO {
     
     static{
         try{
-
-            /* Completar conexión con hibernate */
-            
-            System.out.println("Conexión no realizada");
+        sessionFactory = new Configuration().configure().buildSessionFactory();
+            System.out.println("Conexión realizada");
         }catch(Exception ex){
             System.out.println("Error iniciando Hibernate");
             System.out.println(ex);
             throw new ExceptionInInitializerError(ex);
         }
     }
-    
-    public void saveLibro( Libro e ){
-        
-        /* Guarda un libro con todos sus ejemplares en la base de datos */
-        
-        System.out.println("Método saveLibro no implementado");
-        
+
+    public void saveLibro(Libro e) {
+        try (var sesion = sessionFactory.getCurrentSession().getSessionFactory().openSession();) {
+            sesion.beginTransaction();
+            sesion.save(e);
+            sesion.getTransaction().commit();
+        } catch (Exception ex) {
+            System.out.println("Error al guardar libro");
+            System.out.println(ex);
+        }
+
     }
   
     public HashSet<Libro> findByEstado(String estado){
         
         HashSet<Libro> salida = new HashSet<Libro>();
-        /* 
-         Devuelve el conjunto de libros que tenga el estado indicado      
-        */
-        System.out.println("Método findByEstado no implementado");
-        
+
+        try (var sesion = sessionFactory.getCurrentSession().getSessionFactory().openSession();) {
+            List<Libro> libros;
+            libros = sesion.createSQLQuery("SELECT * FROM libro WHERE id = (SELECT libro_id FROM ejemplar WHERE estado ='"+ estado+"')")
+                    .addEntity(Libro.class)
+                    .getResultList();
+
+            for (Libro libro : libros) {
+                salida.add(libro);
+            }
+
+        } catch (Exception ex) {
+            System.out.println("Error al buscar libro");
+            System.out.println(ex);
+        }
         return salida;
         
     }
@@ -61,8 +78,21 @@ public class BibliotecaDAO {
           ...
         
         */
-        System.out.println("Método printInfo no implementado");
-        
+        try (var sesion = sessionFactory.getCurrentSession().getSessionFactory().openSession();) {
+ /*           sesion.createSQLQuery("SELECT titulo, COUNT(*) FROM libro l INNER JOIN ejemplar ON l.id = ejemplar.libro_id GROUP BY titulo")
+                    .addEntity(Libro.class)
+                    .addEntity(Ejemplar.class)
+                    .getResultList();
+*/
+             var lista = sesion.createQuery("FROM Libro l INNER JOIN Ejemplar e ON l.id = e.libro_id GROUP BY l.titulo").getResultList();
+                for (Object libro : lista) {
+                    System.out.println(libro);
+                }
+        } catch (Exception ex) {
+            System.out.println("Error al imprimir info");
+            System.out.println(ex);
+        }
+
     }
     
 }

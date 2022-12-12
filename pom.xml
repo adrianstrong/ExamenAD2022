@@ -21,7 +21,7 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>5.6.0.Final</version>
-        </dependency>        
+        </dependency>
     </dependencies>
     <name>ExamenADDicc22</name>
 </project>

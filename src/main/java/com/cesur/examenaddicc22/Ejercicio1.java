@@ -1,5 +1,9 @@
 package com.cesur.examenaddicc22;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+
 class Ejercicio1 {
 
     /**
@@ -16,13 +20,32 @@ class Ejercicio1 {
     static void solucion() {
 
         estadísticasDeArchivo("pom.xml");
+
     }
 
     private static void estadísticasDeArchivo(String archivo) {
-        
-        /* añadir código */
-        
-        System.out.println("Ejercicio no resuelto");
-    }
-    
+            File input = new File(archivo);
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(input, StandardCharsets.UTF_8));
+
+                String line = "";
+                Integer lines = 0;
+                Integer amountWords = 0;
+                Integer amountChars = 0;
+                while ((line = br.readLine()) != null) {
+                    lines++;
+                    //System.out.println(line);
+                    String[] words = line.split(" ");
+                    for (String word : words) {
+                        amountChars += word.length();
+                    }
+                    amountWords+= words.length;
+                }
+                System.out.println("Lineas: "+lines+", Palabras: " +amountWords+ ", Caracteres: " +amountChars);
+                br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
 }
